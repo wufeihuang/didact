@@ -125,8 +125,11 @@ function commitWork(fiber) {
     commitDeletion(fiber, domParent)
   }
 
-  commitWork(fiber.child)
-  commitWork(fiber.sibling)
+  // DELETIONs shouldn't recursively call commitWork
+  if (fiber.effectTag !== "DELETION") {
+    commitWork(fiber.child)
+    commitWork(fiber.sibling)
+  }
 }
 
 function commitDeletion(fiber, domParent) {
